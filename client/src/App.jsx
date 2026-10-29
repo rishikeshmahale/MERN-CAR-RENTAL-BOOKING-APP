@@ -3,6 +3,8 @@ import Navbar from "./components/Navbar.jsx";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import CarDetails from "./pages/CarDetails.jsx";
+import Cars from "./pages/Cars.jsx";
+import MyBookings from "./pages/MyBookings.jsx";
 
 const App = () => {
 
@@ -19,6 +21,8 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Home/>}/>
       <Route path="/car-details/:id" element={<CarDetails/>}/>
+      <Route path="/cars" element={<Cars/>}/>
+      <Route path="/my-bookings" element={<MyBookings/>}/>
     </Routes>
 
     </>
