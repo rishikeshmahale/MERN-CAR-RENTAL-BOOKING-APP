@@ -1,10 +1,19 @@
+import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
 
 const CarCard = ({ car }) => {
   const currency = import.meta.env.VITE_CURRENCY;
 
+  const navigate = useNavigate();
+
   return (
-    <div className="group rounded-xl overflow-hidden shadow-lg hover:-translate-y-1 transition-all duration-500 cursor-pointer">
+    <div
+      onClick={() => {
+        navigate(`/car-details/${car._id}`);
+        scrollTo(0,0)
+      }}
+      className="group rounded-xl overflow-hidden shadow-lg hover:-translate-y-1 transition-all duration-500 cursor-pointer"
+    >
       <div className="relative h-48 overflow-hidden">
         <img
           src={car.image}
@@ -40,24 +49,27 @@ const CarCard = ({ car }) => {
         </div>
 
         <div className="mt-4 grid grid-cols-2 grid-y-2 text-gray-600">
-            <div className="flex items-center text-sm text-muted-foreground">
-                <img src={assets.users_icon} alt="user icon" className="h-4 mr-2"/>
-                <span>{car.seating_capacity} Seats</span>
-            </div>
-            <div className="flex items-center text-sm text-muted-foreground">
-                <img src={assets.fuel_icon} alt="fuel icon" className="h-4 mr-2"/>
-                <span>{car.fuel_type}</span>
-            </div>
-            <div className="flex items-center text-sm text-muted-foreground">
-                <img src={assets.car_icon} alt="car icon" className="h-4 mr-2"/>
-                <span>{car.transmission}</span>
-            </div>
-            <div className="flex items-center text-sm text-muted-foreground">
-                <img src={assets.location_icon} alt="location icon" className="h-4 mr-2"/>
-                <span>{car.location}</span>
-            </div>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <img src={assets.users_icon} alt="user icon" className="h-4 mr-2" />
+            <span>{car.seating_capacity} Seats</span>
+          </div>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <img src={assets.fuel_icon} alt="fuel icon" className="h-4 mr-2" />
+            <span>{car.fuel_type}</span>
+          </div>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <img src={assets.car_icon} alt="car icon" className="h-4 mr-2" />
+            <span>{car.transmission}</span>
+          </div>
+          <div className="flex items-center text-sm text-muted-foreground">
+            <img
+              src={assets.location_icon}
+              alt="location icon"
+              className="h-4 mr-2"
+            />
+            <span>{car.location}</span>
+          </div>
         </div>
-
       </div>
     </div>
   );
