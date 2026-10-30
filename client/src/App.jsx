@@ -10,6 +10,7 @@ import Dashboard from "./pages/owner/Dashboard.jsx";
 import AddCar from "./pages/owner/AddCar.jsx";
 import ManageCars from "./pages/owner/ManageCars.jsx";
 import ManageBookings from "./pages/owner/ManageBookings.jsx";
+import Footer from "./components/Footer.jsx";
 
 
 const App = () => {

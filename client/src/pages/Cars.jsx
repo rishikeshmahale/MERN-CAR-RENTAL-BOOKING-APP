@@ -19,7 +19,7 @@ const Cars = () => {
           <img src={assets.search_icon} alt="" className="w-4.5 h-4.5 mr-2" />
 
           <input
-          onClick={(e) => setInput(e.target.value)}
+          onChange={(e) => setInput(e.target.value)}
           value={input}
             type="text"
             placeholder="Search by make, model, or features"
