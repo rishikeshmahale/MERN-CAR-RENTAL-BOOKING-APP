@@ -3,7 +3,6 @@ import FeaturedSection from "../components/FeaturedSection.jsx";
 import Banner from "../components/Banner.jsx";
 import Testimonial from "../components/Testimonial.jsx";
 import NewsLetter from "../components/NewsLetter.jsx";
-import Footer from "../components/Footer.jsx";
 
 const Home = () => {
   return (
@@ -13,7 +12,6 @@ const Home = () => {
         <Banner />
         <Testimonial/>
         <NewsLetter/>
-        <Footer/>
     </div>
   )
 }
