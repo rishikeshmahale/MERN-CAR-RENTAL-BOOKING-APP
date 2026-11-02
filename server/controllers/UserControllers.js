@@ -43,13 +43,11 @@ export const registerUser = async (req, res) => {
     return res.status(201).json({ success: true, token: token });
   } catch (error) {
     console.log(error.message);
-    return res
-      .status(500)
-      .json({
-        success: false,
-        message: "Error in registerUser controller",
-        error: error.message,
-      });
+    return res.status(500).json({
+      success: false,
+      message: "Error in registerUser controller",
+      error: error.message,
+    });
   }
 };
 
@@ -80,12 +78,26 @@ export const loginUser = async (req, res) => {
     return res.status(200).json({ success: true, token });
   } catch (error) {
     console.log(error.message);
-    return res
-      .status(500)
-      .json({
-        success: false,
-        message: "Error in loginUser controller",
-        error: error.message,
-      });
-    }
+    return res.status(500).json({
+      success: false,
+      message: "Error in loginUser controller",
+      error: error.message,
+    });
+  }
+};
+
+// Get User data using Token (JWT)
+export const getUserData = async (req, res) => {
+  try {
+    const { user } = req;
+
+    return res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Error in getUserData controller",
+      error: error.message,
+    });
+  }
 };
