@@ -1,6 +1,7 @@
 import generateToken from "../config/genToken.js";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
+import Car from "../models/Car.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -8,7 +9,7 @@ export const registerUser = async (req, res) => {
 
     if (!name || !email || !password) {
       return res
-        .staus(400)
+        .status(400)
         .json({ success: false, message: "Fill all the fields" });
     }
 
@@ -59,7 +60,7 @@ export const loginUser = async (req, res) => {
 
     if (!user) {
       return res
-        .sttaus(404)
+        .status(404)
         .json({ success: false, message: "User not found" });
     }
 
@@ -101,3 +102,20 @@ export const getUserData = async (req, res) => {
     });
   }
 };
+
+// get all cars for frontend
+export const getCars = async (req, res) =>{
+    try {
+        const cars = await Car.find({isAvaliable: true});
+
+        if(cars.length === 0){
+            return res.status(404).json({success : false, message : "No Cars found!"})
+        }
+
+        return res.status(200).json({success: true, cars});
+
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({success: false, message: error.message})
+    }
+}
