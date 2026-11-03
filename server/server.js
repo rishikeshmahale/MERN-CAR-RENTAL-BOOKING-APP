@@ -3,6 +3,7 @@ import "dotenv/config"
 import cors from "cors"
 import connectDB from "./config/db.js";
 import userRouter from "./routes/userRoutes.js";
+import ownerRouter from "./routes/ownerRoutes.js"
 
 
 const app = express();
@@ -20,8 +21,9 @@ app.get('/', (req, res)=> {
     })
 })
 app.use('/api/user', userRouter);
+app.use('/api/owner', ownerRouter);
 
-connectDB();
+await connectDB();
 
 app.listen(PORT, () => {
     console.log(`Server is listening on PORT : ${PORT}`)
