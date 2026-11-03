@@ -159,4 +159,32 @@ export const toggleCarAvailability = async (req, res) => {
     }
 }
 
+// API to delete a car
 
+export const deleteCar = async (req, res) => {
+    try{
+
+        const { _id } = req.user;
+
+        const { carId } = req.body;
+
+        const car = await Car.findById(carId);
+
+        if(car.owner.toString() !== _id.toString()){
+            return res.status(404).json({success : false, message : "Unauthorized"});
+        }
+
+        car.owner = null;
+        car.isAvaliable = false;
+
+        await car.save();
+
+        return res.status(200).json({success : false, message : "Car Removed."})
+
+    }catch(error){
+        return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+    }
+}
