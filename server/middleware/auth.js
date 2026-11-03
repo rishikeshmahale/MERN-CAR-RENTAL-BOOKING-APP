@@ -2,23 +2,23 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 export const protect = async (req, res, next) => {
-
-    const token = req.headers.authorization?.startsWith("Bearer ")
-        ? req.headers.authorization.split(" ")[1]
-        : null;
+    let token = req.headers.authorization;
 
     if (!token) {
         return res.status(401).json({
             success: false,
-            message: "Not authorized, token missing"
+            message: "Token missing"
         });
     }
 
-    try {
+    if (token.startsWith("Bearer ")) {
+        token = token.split(" ")[1];
+    }
 
+    try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        const user = await User.findById(decoded.userId).select("-password");
+        const user = await User.findById(decoded.id).select("-password");
 
         if (!user) {
             return res.status(401).json({
@@ -32,11 +32,9 @@ export const protect = async (req, res, next) => {
         next();
 
     } catch (error) {
-
         return res.status(401).json({
             success: false,
-            message: "Invalid or expired token"
+            message: error.message
         });
-
     }
 };
