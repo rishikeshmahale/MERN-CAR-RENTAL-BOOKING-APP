@@ -1,17 +1,34 @@
 import { useLocation, NavLink } from "react-router-dom";
-import { assets, dummyUserData, ownerMenuLinks } from "../../assets/assets";
+import { assets, ownerMenuLinks } from "../../assets/assets";
 import { useState } from "react";
+import { useAppContext } from "../../context/AppContext.jsx";
+import toast from "react-hot-toast";
 
 const Sidebar = () => {
-  const user = dummyUserData;
+  const { user, axios, fetchUser } = useAppContext();
 
   const location = useLocation();
 
   const [image, setImage] = useState("");
 
   const updateImage = async () => {
-    user.image = URL.createObjectURL(image);
-    setImage("");
+    try {
+      const formData = new FormData();
+      formData.append("image", image);
+
+      const { data } = await axios.post("/api/owner/update-image", formData);
+      console.log("data form image upload", data);
+
+      if (data.success) {
+        fetchUser();
+        toast.success(data.message);
+        setImage("");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -28,7 +45,13 @@ const Sidebar = () => {
             }
             alt="user"
           />
-          <input type="file" id="image" hidden accept="image/*" />
+          <input
+            type="file"
+            id="image"
+            hidden
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
+          />
 
           <div className="absolute hidden top-0 right-0 left-0 bottom-0 bg-black/10 rounded-full group-hover:flex items-center justify-center cursor-pointer">
             <img src={assets.edit_icon} alt="edit icon" />
