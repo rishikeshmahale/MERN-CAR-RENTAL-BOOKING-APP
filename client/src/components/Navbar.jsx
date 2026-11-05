@@ -75,10 +75,6 @@ const Navbar = () => {
           </button>
 
           <button
-            // onClick={() => {
-            //   setOpen(false);
-            //   setShowLogin(true);
-            // }}
             onClick={() => {
               user ? logout() : setShowLogin(true);
             }}
