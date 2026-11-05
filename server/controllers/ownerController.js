@@ -1,6 +1,6 @@
 import Car from "../models/Car.js";
 import User from "../models/User.js";
-import fs from "fs";
+import Booking from "../models/Booking.js"
 import uploadOnCloudinary from "../config/cloudinary.js";
 
 // Api to change role
@@ -176,7 +176,7 @@ export const deleteCar = async (req, res) => {
 
     await car.save();
 
-    return res.status(200).json({ success: false, message: "Car Removed." });
+    return res.status(200).json({ success: true, message: "Car Removed." });
   } catch (error) {
     return res.status(500).json({
       success: false,
