@@ -50,9 +50,9 @@ export const createBooking = async (req, res) => {
 
         const isAvailable = await checkAvailability(car, pickupDate, returnDate);
 
-        if(!isAvailable){
-            return res.status(404).json({success : false, message : "Car is not Available!"})
-        }
+        // if(!isAvailable){
+        //     return res.status(404).json({success : false, message : "Car is not Available!"})
+        // }
 
         const carData = await Car.findById(car);
 
@@ -65,7 +65,7 @@ export const createBooking = async (req, res) => {
 
         await Booking.create({car, owner : carData.owner, user : _id, pickupDate, returnDate, price});
 
-        return res.staus(201).json({success : true, message : "Booking Created"});
+        return res.status(201).json({success : true, message : "Booking Created"});
 
 
     }catch(error){
