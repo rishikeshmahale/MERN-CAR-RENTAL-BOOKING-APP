@@ -104,13 +104,9 @@ export const getUserData = async (req, res) => {
 };
 
 // get all cars for frontend
-export const getCars = async (req, res) =>{
+export const getCars = async (req, res) => {
     try {
         const cars = await Car.find({isAvailable: true});
-
-        if(cars.length === 0){
-            return res.status(404).json({success : false, message : "No Cars found!"})
-        }
 
         return res.status(200).json({success: true, cars});
 
