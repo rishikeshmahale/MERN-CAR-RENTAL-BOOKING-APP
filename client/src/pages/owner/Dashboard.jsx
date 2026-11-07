@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
-import { assets, dummyDashboardData } from "../../assets/assets.js";
+import { assets } from "../../assets/assets.js";
 import Title from "../../components/Title.jsx";
+import { useAppContext } from "../../context/AppContext.jsx";
+import toast from "react-hot-toast";
 
 const Dashboard = () => {
+  const { axios, isOwner, currency } = useAppContext();
+
   const [data, setData] = useState({
     totalCars: 0,
     totalBookings: 0,
     pendingBookings: 0,
-    completebookings: 0,
-    monthlyBookings: [],
+    completedBookings: 0,
+    recentBookings: [],
     monthlyRevenue: 0,
   });
 
@@ -30,21 +34,31 @@ const Dashboard = () => {
     },
     {
       title: "Confirmed",
-      value: data.completebookings,
+      value: data.completedBookings,
       icon: assets.listIconColored,
     },
   ];
 
-  const currency = import.meta.env.VITE_CURRENCY;
+  const fetchDashboardData = async () => {
+    try {
+      const { data } = await axios.get("/api/owner/dashboard");
+
+      console.log("Dashboard Data:", data);
+
+      if (data.success) {
+        setData(data.dashboardData);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   useEffect(() => {
-
-    const fetchDashboardData = async () => {
-        setData(dummyDashboardData);
+    if (isOwner) {
+      fetchDashboardData();
     }
-
-    fetchDashboardData();
-
   }, []);
 
   return (
