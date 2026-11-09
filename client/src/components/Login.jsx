@@ -7,16 +7,64 @@ const Login = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
 
   const { setShowLogin, axios, setToken, navigate } = useAppContext();
 
+  // Validate form fields
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Name validation (registration only)
+    if (state === "register") {
+      if (!name.trim()) {
+        newErrors.name = "Name is required";
+      } else if (name.trim().length < 3) {
+        newErrors.name = "Name must be at least 3 characters";
+      }
+    }
+
+    // Email validation
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    // Password validation
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (
+      state === "register" &&
+      password.length < 8
+    ) {
+      newErrors.password = "Password must contain at least 8 characters";
+    } else if (
+      state === "register" &&
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s])/.test(password)
+    ) {
+      newErrors.password =
+        "Include uppercase, lowercase, number and special character";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle form submission
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
+    // Stop submission if validation fails
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const { data } = await axios.post(`/api/user/${state}`, {
-        name,
-        email,
+        name: name.trim(),
+        email: email.trim(),
         password,
       });
 
@@ -31,8 +79,26 @@ const Login = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response?.data?.message || error.message);
     }
+  };
+
+  // Clear individual field error when user starts correcting it
+  const handleChange = (field, value) => {
+    if (field === "name") setName(value);
+    if (field === "email") setEmail(value);
+    if (field === "password") setPassword(value);
+
+    setErrors((prev) => ({
+      ...prev,
+      [field]: "",
+    }));
+  };
+
+  // Toggle between login and registration
+  const toggleState = (newState) => {
+    setState(newState);
+    setErrors({});
   };
 
   return (
@@ -43,6 +109,7 @@ const Login = () => {
       <form
         onClick={(e) => e.stopPropagation()}
         onSubmit={onSubmitHandler}
+        noValidate
         className="relative flex flex-col gap-4 m-auto items-start p-8 py-12 w-80 sm:w-[352px] rounded-lg shadow-xl border border-gray-200 bg-white"
       >
         {/* Close Button */}
@@ -66,13 +133,21 @@ const Login = () => {
           <div className="w-full">
             <p>Name</p>
             <input
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => handleChange("name", e.target.value)}
               value={name}
-              placeholder="type here"
-              className="border border-gray-200 rounded w-full p-2 mt-1 outline-primary"
+              placeholder="Enter your name"
+              className={`border rounded w-full p-2 mt-1 outline-primary ${
+                errors.name ? "border-red-500" : "border-gray-200"
+              }`}
               type="text"
-              required
+              autoComplete="name"
             />
+
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.name}
+              </p>
+            )}
           </div>
         )}
 
@@ -80,47 +155,65 @@ const Login = () => {
         <div className="w-full">
           <p>Email</p>
           <input
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => handleChange("email", e.target.value)}
             value={email}
-            placeholder="type here"
-            className="border border-gray-200 rounded w-full p-2 mt-1 outline-primary"
+            placeholder="Enter your email"
+            className={`border rounded w-full p-2 mt-1 outline-primary ${
+              errors.email ? "border-red-500" : "border-gray-200"
+            }`}
             type="email"
-            required
+            autoComplete="email"
           />
+
+          {errors.email && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.email}
+            </p>
+          )}
         </div>
 
         {/* Password Field */}
         <div className="w-full">
           <p>Password</p>
           <input
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => handleChange("password", e.target.value)}
             value={password}
-            placeholder="type here"
-            className="border border-gray-200 rounded w-full p-2 mt-1 outline-primary"
+            placeholder="Enter your password"
+            className={`border rounded w-full p-2 mt-1 outline-primary ${
+              errors.password ? "border-red-500" : "border-gray-200"
+            }`}
             type="password"
-            required
+            autoComplete={
+              state === "login" ? "current-password" : "new-password"
+            }
           />
+
+          {errors.password && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.password}
+            </p>
+          )}
         </div>
 
         {/* Login / Register Toggle */}
         {state === "register" ? (
           <p>
-            Already have account?{" "}
+            Already have an account?{" "}
             <span
-              onClick={() => setState("login")}
+              onClick={() => toggleState("login")}
               className="text-primary cursor-pointer"
             >
-              click here
+              Login here
             </span>
           </p>
         ) : (
           <p>
-            Create an account?{" "}
+            Don't have an account?{" "}
             <span
-              onClick={() => setState("register")}
+              onClick={() => toggleState("register")}
               className="text-primary cursor-pointer"
             >
-              click here
+              Register here
             </span>
           </p>
         )}
