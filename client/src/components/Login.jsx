@@ -12,6 +12,7 @@ const Login = () => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+
     try {
       const { data } = await axios.post(`/api/user/${state}`, {
         name,
@@ -19,31 +20,48 @@ const Login = () => {
         password,
       });
 
-      if(data.success){
-        navigate('/');
+      if (data.success) {
+        navigate("/");
         setToken(data.token);
         localStorage.setItem("token", data.token);
         setShowLogin(false);
 
-        console.log(`${state} successful.`)
-      }else{
+        toast.success(`${state} successful.`);
+      } else {
         toast.error(data.message);
       }
     } catch (error) {
-        toast.error(error.message);
+      toast.error(error.message);
     }
   };
 
   return (
-    <div className="fixed top-0 bottom-0 left-0 right-0 z-100 flex items-center text-sm text-gray-600 bg-black/50">
+    <div
+      onClick={() => setShowLogin(false)}
+      className="fixed inset-0 z-[100] flex items-center text-sm text-gray-600 bg-black/50"
+    >
       <form
+        onClick={(e) => e.stopPropagation()}
         onSubmit={onSubmitHandler}
-        className="flex flex-col gap-4 m-auto items-start p-8 py-12 w-80 sm:w-[352px] rounded-lg shadow-xl border border-gray-200 bg-white"
+        className="relative flex flex-col gap-4 m-auto items-start p-8 py-12 w-80 sm:w-[352px] rounded-lg shadow-xl border border-gray-200 bg-white"
       >
+        {/* Close Button */}
+        <button
+          type="button"
+          onClick={() => setShowLogin(false)}
+          className="absolute top-3 right-4 text-2xl text-gray-500 hover:text-black cursor-pointer"
+          aria-label="Close login popup"
+        >
+          &times;
+        </button>
+
+        {/* Heading */}
         <p className="text-2xl font-medium m-auto">
           <span className="text-primary">User</span>{" "}
           {state === "login" ? "Login" : "Sign Up"}
         </p>
+
+        {/* Name Field */}
         {state === "register" && (
           <div className="w-full">
             <p>Name</p>
@@ -57,7 +75,9 @@ const Login = () => {
             />
           </div>
         )}
-        <div className="w-full ">
+
+        {/* Email Field */}
+        <div className="w-full">
           <p>Email</p>
           <input
             onChange={(e) => setEmail(e.target.value)}
@@ -68,7 +88,9 @@ const Login = () => {
             required
           />
         </div>
-        <div className="w-full ">
+
+        {/* Password Field */}
+        <div className="w-full">
           <p>Password</p>
           <input
             onChange={(e) => setPassword(e.target.value)}
@@ -79,6 +101,8 @@ const Login = () => {
             required
           />
         </div>
+
+        {/* Login / Register Toggle */}
         {state === "register" ? (
           <p>
             Already have account?{" "}
@@ -100,7 +124,12 @@ const Login = () => {
             </span>
           </p>
         )}
-        <button className="bg-primary hover:bg-blue-800 transition-all text-white w-full py-2 rounded-md cursor-pointer">
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="bg-primary hover:bg-blue-800 transition-all text-white w-full py-2 rounded-md cursor-pointer"
+        >
           {state === "register" ? "Create Account" : "Login"}
         </button>
       </form>
