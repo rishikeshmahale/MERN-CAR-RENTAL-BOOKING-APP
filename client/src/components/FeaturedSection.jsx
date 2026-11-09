@@ -1,9 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { assets, dummyCarData } from "../assets/assets.js";
+import { assets } from "../assets/assets.js";
 import CarCard from "./CarCard.jsx";
 import Title from "./Title.jsx";
+import { useAppContext } from "../context/AppContext.jsx";
 
 const FeaturedSection = () => {
+
+  const { cars } = useAppContext();
+
   const navigate = useNavigate();
 
   return (
@@ -16,7 +20,7 @@ const FeaturedSection = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-18">
-        {dummyCarData.slice(0, 6).map((car) => (
+        {cars?.slice(0, 6).map((car) => (
           <div key={car._id}>
             <CarCard car={car} />
           </div>
