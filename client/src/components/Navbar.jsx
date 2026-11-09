@@ -2,30 +2,31 @@ import { useState } from "react";
 import { assets, menuLinks } from "../assets/assets.js";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext.jsx";
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
 const Navbar = () => {
-  const { setShowLogin, user, logout, isOwner, axios, setIsOwner } = useAppContext();
+  const { setShowLogin, user, logout, isOwner, axios, setIsOwner } =
+    useAppContext();
 
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
+  const changeRole = async () => {
+    try {
+      const { data } = await axios.post("/api/owner/change-role");
 
-   const changeRole = async ()=>{
-        try {
-            const { data } = await axios.post('/api/owner/change-role');
-            if (data.success) {
-                setIsOwner(true)
-                toast.success(data.message)
-            }else{
-                toast.error(data.message)
-            }
-        } catch (error) {
-            toast.error(error.message)
-        }
+      if (data.success) {
+        setIsOwner(true);
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error("Login first!");
     }
-
+  };
 
   return (
     <div
@@ -64,10 +65,6 @@ const Navbar = () => {
 
         <div className="flex max-sm:flex-col items-start sm:items-center gap-6 max-sm:px-6">
           <button
-            // onClick={() => {
-            //   setOpen(false);
-            //   navigate("/owner");
-            // }}
             onClick={() => (isOwner ? navigate("/owner") : changeRole())}
             className="cursor-pointer"
           >
